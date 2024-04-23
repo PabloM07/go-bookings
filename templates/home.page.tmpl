@@ -1,0 +1,58 @@
+{{template "base" .}} {{/* Declaración de uso del template base.layout.tmpl */}}
+
+{{define "content"}} {{/* Se declara el bloque de contenido que requiere el template de base */}}
+<!-- Bootstrap Carousel -->
+<div id="main-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item" data-bs-interval="3000">
+            <img src="./static/images/woman-laptop.png" class="d-block w-100" alt="Woman with laptop">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>First slide label</h5>
+                <p>Some representative placeholder content for the first slide.</p>
+            </div>
+        </div>
+        <div class="carousel-item active" data-bs-interval="3000">
+            <img src="./static/images/tray.png" class="d-block w-100" alt="Tray with coffee">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Second slide label</h5>
+                <p>Some representative placeholder content for the second slide.</p>
+            </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="3000">
+            <img src="./static/images/outside.png" class="d-block w-100" alt="Outside">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Third slide label</h5>
+                <p>Some representative placeholder content for the third slide.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Bootstrap Carousel -->
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center mt-5">Welcome to Fort Ricardero Bed and Breakfast</h1>
+            <p>
+                Your home away from home, se on the majestic waters of the Atlantic Ocean, this will be a vacation
+                to remember.
+                Your home away from home, se on the majestic waters of the Atlantic Ocean, this will be a vacation
+                to remember.
+                Your home away from home, se on the majestic waters of the Atlantic Ocean, this will be a vacation
+                to remember.
+                Your home away from home, se on the majestic waters of the Atlantic Ocean, this will be a vacation
+                to remember.
+                Your home away from home, se on the majestic waters of the Atlantic Ocean, this will be a vacation
+                to remember.
+                Your home away from home, se on the majestic waters of the Atlantic Ocean, this will be a vacation
+                to remember.
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <a href="./make-reservation" class="btn btn-success">Make Reservation Now</a>
+        </div>
+    </div>
+</div>
+{{end}}

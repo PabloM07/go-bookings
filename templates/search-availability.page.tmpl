@@ -1,0 +1,123 @@
+{{template "base" .}}
+
+{{define "content"}}
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <h1 class="mt-5">Search for Availability</h1>
+
+            <form action="/search-availability" method="post" novalidate class="needs-validation">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <div class="row">
+                    <div class="col">
+                        <div class="row" id="reservation-dates">
+                            <div class="col-md-6 date-controls">
+                                <input required class="form-control" type="text" name="start" autocomplete="off" placeholder="Arrival">
+
+                                <span class="date-separator">
+                                    <div id="tolabel">to</div>
+                                </span>
+
+                                <input required class="form-control" type="text" name="end" autocomplete="off" placeholder="Departure">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <button type="submit" class="btn btn-primary" id="res-button">Search Availability</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "js"}}
+<script>
+    let attention = Prompt();
+    (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+    const elem = document.getElementById('reservation-dates');
+    const rangePicker = new DateRangePicker(elem, {
+        format: "yyyy-mm-dd",
+    });
+
+    document.getElementById('res-button').addEventListener("click", () => {
+        // notify("This is my message", "success")
+
+        // modal('Title modal', 'Modal message', 'warning', 'Quisiió!')
+        /*
+        attention.toast({
+            msg: "Hello, world!",
+            icon: "question"
+        });
+        */
+
+        let html = `
+                <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">
+                    <div class="row">
+                        <div class="col">
+                            <div class="row" id="reservation-dates-modal">
+                                <div class="col-md-6 date-controls">
+                                    <input disabled required class="form-control" type="text" name="start" id="start" autocomplete="off" placeholder="Arrival"
+                                    <span></span>
+                                    <input disabled required class="form-control" type="text" name="end" id="end" autocomplete="off" placeholder="Departure"
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+                </form>
+            `
+
+        /*attention.success({
+            msg: "Task failed successfully!",
+            title: "Fail success",
+            footer: "<a href=\"#\">Link to your mom's ass</a>"
+        })*/
+
+        attention.custom({
+            msg: html,
+            title: "Choose your dates"
+        })
+    })
+
+    // Notify with modal windows with SweetAlert
+    function modal(title, msg, icon, btnText) {
+        Swal.fire({
+            title: title,
+            text: msg,
+            icon: icon,
+            confirmButtonText: btnText
+        })
+    }
+
+    // Notify with Notie Library
+    function notify(msg, msgType) {
+        notie.alert({
+            type: msgType,
+            text: msg,
+        })
+    }
+</script>
+{{end}}

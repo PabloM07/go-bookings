@@ -1,0 +1,70 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Make reservation</h1>
+            <!-- Agregar 'class="needs-validation"' para habilitar validación por JS -->
+            <form method="get" action="/search-availability" novalidate>
+
+                <div class="form-group mt-5">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" name="first_name" id="first_name" class="form-control" autocomplete="off" required>
+                </div>
+
+
+                <div class="form-group mt-5">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control" autocomplete="off" required>
+                </div>
+
+
+                <div class="form-group mt-5">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" class="form-control" autocomplete="off" required>
+                </div>
+
+
+                <div class="form-group mt-5">
+                    <label for="phone">Phone:</label>
+                    <input type="text" name="phone" id="phone" class="form-control" autocomplete="off" required>
+                </div>
+
+                <hr>
+
+                <input type="submit" class="btn btn-primary" value="Make Reservation">
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{define "js"}}
+<script>
+    /*
+    Aqui insertaremos un código JavaScript traido desde Bootstrap para validación de inputs
+    */
+    (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{{end}}

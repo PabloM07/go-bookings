@@ -1,0 +1,40 @@
+.my-footer {
+    height: 5em;
+    color: aliceblue;
+    background-color: #01386a;
+    margin-top: 1.5em;
+    padding: 1em;
+    font-size: 80%;
+}
+
+.date-controls {
+    display: flex;
+    width: 100%;
+}
+
+.date-separator {
+    background-color: lightgray;
+    border-width: thin;
+    border-color: dimgrey;
+    border-style: solid;
+}
+
+#tolabel {
+    width: 2em;
+    text-align: center;
+    vertical-align: middle;
+    height: 2em;
+    margin-top: 0.5em;
+}
+
+.swal2-actions {
+    z-index: 0;
+}
+
+.redText {
+    color: red;
+}
+
+.button {
+    margin-top: 1.5em;
+}
