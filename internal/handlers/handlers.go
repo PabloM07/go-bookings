@@ -123,6 +123,43 @@ func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 
 // PostReservation maneja la recepción de una petición de reserva de la habitación.
 func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
+	// Parseamos la instancia de formulario que le pasamos en el método MakeReservation() y detectamos
+	// si existen errores.
+	err := r.ParseForm()
+	if (err != nil) {
+		log.Println(err)
+		return
+	}
+
+	// Se instancia una variable del modelo de formulario que definimos en el paquete 'forms' y se
+	// le carga todos los datos traidos del formulario del request POST.
+	reserv := models.Reservation{
+		FirstName:	r.Form.Get("first_name"),
+		LastName:	r.Form.Get("last_name"),
+		Phone:		r.Form.Get("phone"),
+		Email:		r.Form.Get("email"),
+	}
+
+	// Una vez cargados los datos que trajimos del formulario, procederemos a verificar la fiabilidad
+	// de éstos.
+
+	form := forms.New(r.PostForm)
+
+	// Se verifica con el método Has() si el campo solicitado del formulario trae datos.
+	form.Has("first_name", r)
+
+	if !form.Valid() {
+		// En caso que el formulario contenga errores, se procede a reabrir la página con los datos
+		// precargados anteriormente para solicitar su corrección.
+		data := make(map[string]any)
+		data["reservation"] = reserv
+
+		render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
+	}
 
 }
 

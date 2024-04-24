@@ -31,8 +31,18 @@ func New(data url.Values) *Form {
 	}
 }
 
-// Has revisa si el campo del formulario está en la petición y no está vacío.
+// Has revisa si el campo del formulario está en el cuerpo del request y no está vacío.
 func (f *Form) Has(field string, r *http.Request) bool {
 	x := r.Form.Get(field)
-	return x == ""
+	if x == "" {
+		f.Errors.Add(field, "This field cannot be blank")
+		return false
+	}
+	return true
+}
+
+// Valid controla el formulario en busca de errores de validación. Devuelve True si el formulario
+// tiene datos válidos o false si existen
+func (f *Form) Valid() bool {
+	return len(f.Errors) == 0
 }
