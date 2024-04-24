@@ -123,12 +123,18 @@ func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 
 // PostReservation maneja la recepción de una petición de reserva de la habitación.
 func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
-	
+
 }
 
 // MakeReservation es la renderización de la página de reservas de habitaciones
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{
+		/*
+			Como nuestra página de reservación tiene una acción que se ejecuta con la carga y el envio de
+			ciertos datos, debemos pasarle al template la abstracción de dicho formulario para el check de
+			datos del lado del servidor (en caso de que el cliente tenga JS desactivado de su navegador),
+			además de performar la acción en concreto de la reserva.
+		*/
 		Form: forms.New(nil),
 	})
 }
