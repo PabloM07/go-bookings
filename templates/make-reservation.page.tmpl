@@ -8,7 +8,7 @@
             <h1>Make reservation</h1>
             <!-- Agregar 'class="needs-validation"' para habilitar validación por JS -->
             <form method="get" action="/search-availability" novalidate>
-
+                <input type="hidden" name="csrf_token" id="{{.CSRFToken}}">
                 <div class="form-group mt-5">
                     <label for="first_name">First Name:</label>
                     <input type="text" name="first_name" id="first_name" class="form-control" autocomplete="off" required>
