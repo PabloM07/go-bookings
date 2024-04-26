@@ -1,8 +1,10 @@
 package forms
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 /*
@@ -22,7 +24,7 @@ type Form struct {
 
 // New inicializa una estructura Form
 func New(data url.Values) *Form {
-	return &Form {
+	return &Form{
 		data,
 
 		// Se declara un mapa de slices de strings vacío, de igual manera que se puede
@@ -41,8 +43,46 @@ func (f *Form) Has(field string, r *http.Request) bool {
 	return true
 }
 
+/*
+	Como veremos en esta función, en los parámetros requeridos, usamos unos puntos suspensivos
+	por detrás de el tipo de datos que esperamos recibir. Eso se llama una función variádica, y
+	significa que la cantidad de datos que puedo recibir de este tipo es variable específicamente
+	en ese orden o lugar del input de parámetros, es decir, que puedo pasarle, en este caso, la
+	cantidad de strings que querramos, cuyos valores dentro de la función se tratarán como un
+	slice de strings.
+*/
+
+// Required recopila los campos requeridos del formulario para validar su contenido
+func (f *Form) Required(fields ...string) {
+
+	// Recorremos la colección (slice) de nombres de campos
+	for _, field := range fields {
+
+		// Obtenemos del formulario el valor del campo que coincide con el nombre que le pasamos
+		val := f.Get(field)
+
+		// Quitamos los espacios en blanco del principio y del final de la cadena de string
+		if strings.TrimSpace(val) == "" {
+
+			// Si el valor devuelto por la función está vacío, agregamos un error a la lista de
+			// errores a mostrar en el cliente
+			f.Errors.Add(field, "This field cannot be blank")
+		}
+	}
+}
+
 // Valid controla el formulario en busca de errores de validación. Devuelve True si el formulario
 // tiene datos válidos o false si existen
 func (f *Form) Valid() bool {
 	return len(f.Errors) == 0
+}
+
+// MinLength valida que el campo dado contenga un dato string que supere una cantidad dada de caracteres
+func (f *Form) MinLength(field string, length int, r *http.Request) bool {
+	x := r.Form.Get(field)
+	if len(x) < length {
+		f.Errors.Add(field, fmt.Sprintf("This field must be at least %d characters long", length))
+		return false
+	}
+	return true
 }

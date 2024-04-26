@@ -146,7 +146,11 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	form := forms.New(r.PostForm)
 
 	// Se verifica con el método Has() si el campo solicitado del formulario trae datos.
-	form.Has("first_name", r)
+	//form.Has("first_name", r)
+
+	// Verificamos con un método masivo, la validez de los campos requeridos del formulario.
+	form.Required("first_name", "last_name", "email")
+	form.MinLength("first_name", 3, r)
 
 	if !form.Valid() {
 		// En caso que el formulario contenga errores, se procede a reabrir la página con los datos
@@ -165,6 +169,16 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 
 // MakeReservation es la renderización de la página de reservas de habitaciones
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
+	// Se crea una instancia de la struct que nos trae el esquema del formulario necesario para generar
+	// la reserva 
+	var emptyRes models.Reservation
+
+	// Se crea un mapa de claves-valores que poseen un alias a un dato de cualquier tipo que interactúe
+	// con el cliente
+	data := make(map[string]any)
+
+	// Se le agrega el formulario vacío declarado anteriormente como abstracción del formulario a mostrar
+	data["reservation"] = emptyRes
 	render.RenderTemplate(w, r, "make-reservation.page.tmpl", &models.TemplateData{
 		/*
 			Como nuestra página de reservación tiene una acción que se ejecuta con la carga y el envio de
@@ -173,6 +187,9 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 			además de performar la acción en concreto de la reserva.
 		*/
 		Form: forms.New(nil),
+
+		// Se adjunta el arreglo de datos que debemos pasarle al controlador del cliente
+		Data: data,
 	})
 }
 

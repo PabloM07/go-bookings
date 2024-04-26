@@ -13,7 +13,9 @@ func (e errors) Add(field, message string) {
 }
 
 // Get devuelve el primer error de cada campo. En caso de que no hayan errores
-// precargados, se devuelve un string vacío. 
+// precargados, se devuelve un string vacío. Se devuelve sólo el primer error
+// para que muestre sólo un mensaje en los campos de textos que se muestran
+// en el cliente, por más que existan más validaciones erróneas sobre ese campo
 func (e errors) Get(field string) string {
 
 	// Buscamos el slice de strings que corresponden a ese campo
