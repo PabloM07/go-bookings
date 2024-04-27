@@ -14,6 +14,14 @@ import (
 
 var app *config.AppConfig
 
+/*
+	En este ejemplo, utilizaremos el paquete 'http' propio de Golang para renderizar los templates
+	html con los que vamos a trabajar en esta Webapp. Aún así, una sugerencia por parte del docente
+	es jugar y aprender con la siguiente librería:
+
+	http://github.com/CloudyKit/jet
+*/
+
 // NewTemplate setea la config para el paquete template
 func NewTemplates(a *config.AppConfig) {
 	app = a
@@ -21,7 +29,16 @@ func NewTemplates(a *config.AppConfig) {
 
 // AddDefaultData agrega datos adicionales para todos los templates
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+
+	// Parámetro que se obtiene del TemplateData para verificar si mostrar alertas de distintos alias
+	// información que se muestra y desaparece cuando la página que lo muestra se refresca.
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Error = app.Session.PopString(r.Context(), "error")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
+
+	// Generación del token CSRF para prevenir accesos maliciosos
 	td.CSRFToken = nosurf.Token(r)
+
 	return td
 }
 

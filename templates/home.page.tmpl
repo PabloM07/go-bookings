@@ -56,3 +56,19 @@
     </div>
 </div>
 {{end}}
+
+{{define "js"}}
+<script>
+    {{with .Flash}}
+    notify("{{.}}", "success")
+    {{end}}
+    
+    {{with .Error}}
+    notify("{{.}}", "error")
+    {{end}}
+    
+    {{with .Warning}}
+    notify("{{.}}", "warning")
+    {{end}}
+</script>
+{{end}}

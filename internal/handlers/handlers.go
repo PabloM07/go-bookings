@@ -126,7 +126,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	// Parseamos la instancia de formulario que le pasamos en el método MakeReservation() y detectamos
 	// si existen errores.
 	err := r.ParseForm()
-	if (err != nil) {
+	if err != nil {
 		log.Println(err)
 		return
 	}
@@ -134,10 +134,10 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	// Se instancia una variable del modelo de formulario que definimos en el paquete 'forms' y se
 	// le carga todos los datos traidos del formulario del request POST.
 	reserv := models.Reservation{
-		FirstName:	r.Form.Get("first_name"),
-		LastName:	r.Form.Get("last_name"),
-		Phone:		r.Form.Get("phone"),
-		Email:		r.Form.Get("email"),
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
+		Phone:     r.Form.Get("phone"),
+		Email:     r.Form.Get("email"),
 	}
 
 	// Una vez cargados los datos que trajimos del formulario, procederemos a verificar la fiabilidad
@@ -150,7 +150,12 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 
 	// Verificamos con un método masivo, la validez de los campos requeridos del formulario.
 	form.Required("first_name", "last_name", "email")
+
+	// Incorporamos un ejemplo de validación de mínimos caracteres soportados
 	form.MinLength("first_name", 3, r)
+
+	// Implementamos una validación de formato email
+	form.IsEmail("email")
 
 	if !form.Valid() {
 		// En caso que el formulario contenga errores, se procede a reabrir la página con los datos
@@ -165,12 +170,32 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	/*
+		Hasta aquí tenemos todo el mecanismo por el cual verificamos todos los datos del formulario
+		para efectuar la reserva. Lo que debemos lograr ahora, es redirigir a la página del nuevo
+		template que creamos para mostrar los datos precargados antes de confirmar la reserva, o bién,
+		cuando ésta ya fué confirmada.
+	*/
+
+	// Obtenemos la sesión activa para agregarle los datos a mostrar en la página de precarga de la
+	// reserva. Como valores, se pasa el contexto del request, la clave en string, y el valor del tipo
+	// 'any' o 'interface{}'
+	m.App.Session.Put(r.Context(), "reservation", reserv)
+
+	/*
+		Luego de subir el formulario de la reserva con sus datos pertinentes, debemos evitar que se repita
+		la recepción inmediata de los mismos dentro de la misma sesión para evitar cargar el formulario,
+		por lo que debemos indicarle a la sesión que nos redirija a la página que muestra los datos de la
+		nueva reserva
+	*/
+	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
+
 }
 
 // MakeReservation es la renderización de la página de reservas de habitaciones
 func (m *Repository) MakeReservation(w http.ResponseWriter, r *http.Request) {
 	// Se crea una instancia de la struct que nos trae el esquema del formulario necesario para generar
-	// la reserva 
+	// la reserva
 	var emptyRes models.Reservation
 
 	// Se crea un mapa de claves-valores que poseen un alias a un dato de cualquier tipo que interactúe
@@ -201,4 +226,45 @@ func (m *Repository) Generals(w http.ResponseWriter, r *http.Request) {
 // Majors es la renderización de la página Major's Room de nuestro sitio
 func (m *Repository) Majors(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "majors.page.tmpl", &models.TemplateData{})
+}
+
+// ReserveSum renderiza la página del resumen de reserva con los datos traidos del formulario
+func (m *Repository) ReservSum(w http.ResponseWriter, r *http.Request) {
+	/*
+		Antes de renderizar la página, debemos obtener los datos del formulario cargado que obtuvimos de
+		parte de la redirección de página, luego de haber confirmado la carga de datos desde la sección
+		anterior. Para esto, utilizamos el método Get() de la sesión para pedirle un valor almacenado.
+		Como este método devuelve como tipo de datos un 'any' o 'interface{}' debemos escribir un tipo
+		de aserción, es decir, una especificación del tipo de datos que se espera recibir desde esta
+		sesión, de manera de mantener un check sobre el tipo de datos que quiero obtener para poder
+		manipularlo dentro del método, cuya sintaxis x.(T), donde x es el valor que quieres verificar
+		y T es el tipo que estás comprobando.
+	*/
+	reserv, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+
+	// Comprobamos que el tipo de aserción sea coincidente
+	if !ok {
+		log.Println("Cannot get item from session")
+
+		// Agrego un mensaje de error a la sesión para mostrarle al usuario
+		m.App.Session.Put(r.Context(), "error", "Can't got reservation from session")
+
+		// Redirigimos a la home page con un código HTTP 307
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+	// Quitamos el valor "reservation" de la sesión de nuestro context
+	m.App.Session.Remove(r.Context(), "reservation")
+
+	// Instanciamos un mapa de clave-valor para cargar nuestro formulario con datos ya verificados
+	data := make(map[string]any)
+
+	// Cargamos el formulario a mostrar
+	data["reservation"] = reserv
+
+	render.RenderTemplate(w, r, "reservation-summary.page.tmpl", &models.TemplateData{
+
+		// Lo incluimos como parámetro para mostrar en respuesta a la petición HTTP.
+		Data: data,
+	})
 }

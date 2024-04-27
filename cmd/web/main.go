@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/pablom07/go-course/internal/config"
 	"github.com/pablom07/go-course/internal/handlers"
+	"github.com/pablom07/go-course/internal/models"
 	"github.com/pablom07/go-course/internal/render"
 )
 
@@ -18,6 +20,12 @@ var app config.AppConfig
 var session *scs.SessionManager
 
 func main() {
+	/*
+		Declaración de tipos de datos que se añadirán a la sesión. Se usa para el manejo
+		de formularios (en forma de structs), y/o el intercambio de información suelta
+		(valores primitivos) para su exposición del lado del cliente 
+	*/
+	gob.Register(models.Reservation{})
 
 	// Cambiar este valor cuando se encuentre en prod
 	app.InProduction = false

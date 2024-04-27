@@ -103,3 +103,21 @@ function Prompt() {
         custom: custom
     }
 }
+
+// Notify with modal windows with SweetAlert
+function modal(title, msg, icon, btnText) {
+    Swal.fire({
+        title: title,
+        text: msg,
+        icon: icon,
+        confirmButtonText: btnText
+    })
+}
+
+// Notify with Notie Library
+function notify(msg, msgType) {
+    notie.alert({
+        type: msgType,
+        text: msg,
+    })
+}
