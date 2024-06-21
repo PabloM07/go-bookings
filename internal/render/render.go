@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -12,7 +13,11 @@ import (
 	"github.com/pablom07/go-course/internal/models"
 )
 
+// Funciones que le queremos atribuir a nuestros templates html
+var funcs = template.FuncMap{}
+
 var app *config.AppConfig
+var tmplPath string = "./templates"
 
 /*
 	En este ejemplo, utilizaremos el paquete 'http' propio de Golang para renderizar los templates
@@ -96,7 +101,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 
 	// Obtener todos los archivos nombrados como *.page.tmpl desde ./templates
 
-	pages, err := filepath.Glob("./templates/*.page.tmpl")
+	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", tmplPath))
 
 	if err != nil {
 		return myCache, err
@@ -109,20 +114,20 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 		name := filepath.Base(page)
 
 		// ts: template-set
-		ts, err := template.New(name).ParseFiles(page)
+		ts, err := template.New(name).Funcs(funcs).ParseFiles(page)
 
 		if err != nil {
 			return myCache, err
 		}
 
-		matches, err := filepath.Glob("./templates/*.layout.tmpl")
+		matches, err := filepath.Glob(fmt.Sprintf("%s/*.layout.tmpl", tmplPath))
 
 		if err != nil {
 			return myCache, err
 		}
 
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob("./templates/*.layout.tmpl")
+			ts, err = ts.ParseGlob(fmt.Sprintf("%s/*.layout.tmpl", tmplPath))
 			if err != nil {
 				return myCache, err
 			}
