@@ -1,0 +1,13 @@
+mode: set
+github.com/pablom07/go-course/cmd/web/main.go:22.13,29.16 2 0
+github.com/pablom07/go-course/cmd/web/main.go:29.16,31.3 1 0
+github.com/pablom07/go-course/cmd/web/main.go:33.2,42.16 4 0
+github.com/pablom07/go-course/cmd/web/main.go:42.16,44.3 1 0
+github.com/pablom07/go-course/cmd/web/main.go:47.18,68.16 10 1
+github.com/pablom07/go-course/cmd/web/main.go:68.16,71.3 2 0
+github.com/pablom07/go-course/cmd/web/main.go:72.2,83.12 6 1
+github.com/pablom07/go-course/cmd/web/middleware.go:11.53,12.71 1 0
+github.com/pablom07/go-course/cmd/web/middleware.go:12.71,15.3 2 0
+github.com/pablom07/go-course/cmd/web/middleware.go:19.45,29.2 3 1
+github.com/pablom07/go-course/cmd/web/middleware.go:32.50,34.2 1 1
+github.com/pablom07/go-course/cmd/web/routes.go:12.47,43.2 17 1

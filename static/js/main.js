@@ -81,7 +81,7 @@ function Prompt() {
         });
 
         if (result) {
-            // Cuando se busca comparar resultados exactos, se utilizan '===' o '!=='
+            // Cuando se busca comparar resultados exactos o literales, se utilizan '===' o '!=='
             if (result.dismiss !== Swal.DismissReason.cancel) {
                 if (result !== "") {
                     if (c.callback !== undefined) {

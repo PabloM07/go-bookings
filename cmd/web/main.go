@@ -20,6 +20,31 @@ var app config.AppConfig
 var session *scs.SessionManager
 
 func main() {
+	/**
+	* Se relocaliza toda la funcionalidad del método main() por cuestiones de pruebas
+	* unitarias.
+	*/
+
+	err := run()
+	if err != nil {
+		log.Fatal(err);
+	}
+
+	fmt.Printf("Starting app on port %s\n", portNumber)
+	// _ = http.ListenAndServe(portNumber, nil)
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
 	/*
 		Declaración de tipos de datos que se añadirán a la sesión. Se usa para el manejo
 		de formularios (en forma de structs), y/o el intercambio de información suelta
@@ -42,6 +67,7 @@ func main() {
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache:", err)
+		return err
 	}
 	app.TemplateCache = tc
 	app.UseCache = false
@@ -54,18 +80,5 @@ func main() {
 	// Web Routing using 'net/http'
 	// http.HandleFunc("/", repo.Home)
 	// http.HandleFunc("/about", repo.About)
-
-	fmt.Println(fmt.Sprintf("Starting app on port %s", portNumber))
-	// _ = http.ListenAndServe(portNumber, nil)
-
-	srv := &http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-
-	err = nil
-	err = srv.ListenAndServe()
-	if err != nil {
-		log.Fatal(err)
-	}
+	return nil;
 }

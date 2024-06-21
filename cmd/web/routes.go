@@ -9,7 +9,7 @@ import (
 	"github.com/pablom07/go-course/internal/handlers"
 )
 
-func routes(app *config.AppConfig) http.Handler {
+func routes(_ *config.AppConfig) http.Handler {
 	/*	Ruteo usando github.com/bmizerany/pat
 		mux := pat.New()
 		mux.Get("/", http.HandlerFunc(handlers.Repo.Home))

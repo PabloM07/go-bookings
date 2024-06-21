@@ -9,7 +9,7 @@ import (
 
 // Función de prueba de un middleware HTTP
 func WriteToConsole(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Hit the page")
 		next.ServeHTTP(w, r)
 	})
@@ -21,14 +21,14 @@ func NoSurf(next http.Handler) http.Handler {
 
 	csrfHandler.SetBaseCookie(http.Cookie{
 		HttpOnly: true,
-		Path: "/",
-		Secure: app.InProduction,
+		Path:     "/",
+		Secure:   app.InProduction,
 		SameSite: http.SameSiteLaxMode,
 	})
 	return csrfHandler
 }
 
-// Carga y persiste la sesión en cada request 
+// Carga y persiste la sesión en cada request
 func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
 }

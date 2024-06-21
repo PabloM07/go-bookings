@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/asaskevich/govalidator"
+	goval "github.com/asaskevich/govalidator"
 )
 
 /*
@@ -93,7 +93,7 @@ func (f *Form) MinLength(field string, length int, r *http.Request) bool {
 func (f *Form) IsEmail(field string) bool {
 
 	// Utilizamos un validador externo de la librería 'govalidator' para la verificación del formato
-	if !govalidator.IsEmail(f.Get(field)) {
+	if !goval.IsEmail(f.Get(field)) {
 		f.Errors.Add(field, "Invalid email address")
 	}
 	return false

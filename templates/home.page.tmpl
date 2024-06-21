@@ -58,17 +58,15 @@
 {{end}}
 
 {{define "js"}}
-<script>
     {{with .Flash}}
-    notify("{{.}}", "success")
+    <script>notify("{{.}}", "success")</script>
     {{end}}
     
     {{with .Error}}
-    notify("{{.}}", "error")
+    <script>notify("{{.}}", "error")</script>
     {{end}}
     
     {{with .Warning}}
-    notify("{{.}}", "warning")
+    <script>notify("{{.}}", "warning")</script>
     {{end}}
-</script>
 {{end}}
