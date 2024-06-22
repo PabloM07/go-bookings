@@ -12,7 +12,6 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/justinas/nosurf"
 	"github.com/pablom07/go-course/internal/config"
 	"github.com/pablom07/go-course/internal/models"
 	"github.com/pablom07/go-course/internal/render"
