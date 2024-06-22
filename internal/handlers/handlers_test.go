@@ -20,12 +20,12 @@ var tests = []struct {
 	expStatusCode int
 }{
 	// GET requests tests
-	{"home",	"/",					"GET", []postData{}, http.StatusOK},
-	{"about",	"/about",				"GET", []postData{}, http.StatusOK},
+	{"home",	"/",			"GET", []postData{}, http.StatusOK},
+	{"about",	"/about",		"GET", []postData{}, http.StatusOK},
 	{"gq",		"/generals-quarters",	"GET", []postData{}, http.StatusOK},
-	{"ms", 		"/majors-suite",		"GET", []postData{}, http.StatusOK},
+	{"ms", 		"/majors-suite",	"GET", []postData{}, http.StatusOK},
 	{"sa",		"/search-availability",	"GET", []postData{}, http.StatusOK},
-	{"contact",	"/contact",				"GET", []postData{}, http.StatusOK},
+	{"contact",	"/contact",		"GET", []postData{}, http.StatusOK},
 	{"mr",		"/make-reservation",	"GET", []postData{}, http.StatusOK},
 
 	// POST requests tests
@@ -33,11 +33,11 @@ var tests = []struct {
 		{key: "start",	value: "2024-07-07"},
 		{key: "end",	value: "2024-07-08"},
 	}, http.StatusOK},
-	{"p_mr",	"/make-reservation",			"POST", []postData{
+	{"p_mr",	"/make-reservation",		"POST", []postData{
 		{key: "first-name",	value: "John"},
 		{key: "last-name",	value: "Smith"},
-		{key: "email",	value: "me@here.com"},
-		{key: "phone",	value: "555-555-5555"},
+		{key: "email",		value: "me@here.com"},
+		{key: "phone",		value: "555-555-5555"},
 	}, http.StatusOK},
 	
 	
