@@ -61,6 +61,8 @@ func getRoutes() http.Handler {
 	return mux
 }
 
+/*
+// Función suprimida para permitir pruebas CORS en 
 func NoSurf(next http.Handler) http.Handler {
 	csrfHandler := nosurf.New(next)
 
@@ -72,7 +74,7 @@ func NoSurf(next http.Handler) http.Handler {
 	})
 	return csrfHandler
 }
-
+*/
 // Carga y persiste la sesión en cada request
 func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
