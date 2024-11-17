@@ -267,4 +267,11 @@ func (m *Repository) ReservSum(w http.ResponseWriter, r *http.Request) {
 		// Lo incluimos como parámetro para mostrar en respuesta a la petición HTTP.
 		Data: data,
 	})
+
+}
+
+func (m *Repository) Ping(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("pong"))
 }
