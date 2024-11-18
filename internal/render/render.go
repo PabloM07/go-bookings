@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
 	"log"
@@ -47,7 +48,10 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 	return td
 }
 
-func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
+// Función que renderiza los templates HTML para Golang. Para poder armar la prueba unitaria, debemos
+// evitar que la ejecución se interrumpa a causa de algún error y hacer que devuelva el error para
+// analizarlo.
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) error {
 	// Crear una caché de templates
 	var tc map[string]*template.Template
 
@@ -62,7 +66,11 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 	t, ok := tc[tmpl]
 
 	if !ok {
-		log.Fatal("Couldn't get template from cache")
+		// Imprimimos el mensaje en el log
+		log.Println("can't get template from cache!")
+
+		// Devolvemos el error para analizarlo en pruebas unitarias.
+		return errors.New("can't get template from cache")
 	}
 
 	buf := new(bytes.Buffer)
@@ -80,15 +88,18 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 
 	if err != nil {
 		log.Println(err)
+		return errors.New("can't get template from cache")
 	}
 
 	// Renderizar el template leído del disco
-
 	_, err = buf.WriteTo(w)
 
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
+
+	// Al final de la ejecución, concluimos devolviendo nulo para errores.
+	return nil
 }
 
 // CreateTemplateCache se usa para generar una caché de templates de 0, leyendo los
