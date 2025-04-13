@@ -10,14 +10,15 @@ import (
 // AppConfig mantiene la configuración de la aplicación
 type AppConfig struct {
 	// Variable que podemos usar para activar y desactivar el uso de cache
-	UseCache		bool
+	UseCache bool
 	// Mapa de caché de templates
-	TemplateCache	map[string]*template.Template
+	TemplateCache map[string]*template.Template
 	// Logueador de procesos de la Webapp
-	InfoLog			*log.Logger
+	InfoLog *log.Logger
+	// Logueador de errores de la Webapp
+	ErrorLog *log.Logger
 	// Flag que determina si el programa corre en producción
-	InProduction	bool
+	InProduction bool
 	// Contiene los datos de la sesión HTTP
-	Session 		*scs.SessionManager
-
+	Session *scs.SessionManager
 }

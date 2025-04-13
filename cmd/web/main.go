@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/alexedwards/scs/v2"
@@ -18,16 +19,18 @@ const portNumber string = ":8080"
 
 var app config.AppConfig
 var session *scs.SessionManager
+var infoLog *log.Logger
+var errorLog *log.Logger
 
 func main() {
 	/**
 	* Se relocaliza toda la funcionalidad del método main() por cuestiones de pruebas
 	* unitarias.
-	*/
+	 */
 
 	err := run()
 	if err != nil {
-		log.Fatal(err);
+		log.Fatal(err)
 	}
 
 	fmt.Printf("Starting app on port %s\n", portNumber)
@@ -48,12 +51,18 @@ func run() error {
 	/*
 		Declaración de tipos de datos que se añadirán a la sesión. Se usa para el manejo
 		de formularios (en forma de structs), y/o el intercambio de información suelta
-		(valores primitivos) para su exposición del lado del cliente 
+		(valores primitivos) para su exposición del lado del cliente
 	*/
 	gob.Register(models.Reservation{})
 
 	// Cambiar este valor cuando se encuentre en prod
 	app.InProduction = false
+
+	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	errorLog = log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
@@ -80,5 +89,5 @@ func run() error {
 	// Web Routing using 'net/http'
 	// http.HandleFunc("/", repo.Home)
 	// http.HandleFunc("/about", repo.About)
-	return nil;
+	return nil
 }

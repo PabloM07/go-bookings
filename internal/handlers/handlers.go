@@ -2,12 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/pablom07/go-course/internal/config"
 	"github.com/pablom07/go-course/internal/forms"
+	"github.com/pablom07/go-course/internal/helpers"
 	"github.com/pablom07/go-course/internal/models"
 	"github.com/pablom07/go-course/internal/render"
 )
@@ -36,11 +38,11 @@ func NewHandlers(r *Repository) {
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 	// Aqui se implementa un poco de lógica de negocios
 
-	// Usaremos la sesión para imprimir la IP desde donde se llama a la webapp
-	remoteIP := r.RemoteAddr
+	// [DEPRECADO] Usaremos la sesión para imprimir la IP desde donde se llama a la webapp
+	// remoteIP := r.RemoteAddr
 
-	// Colocaremos el valor asignándoselo a una clave dentro de la sesión levantada por el cliente
-	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
+	// [DEPRECADO] Colocaremos el valor asignándoselo a una clave dentro de la sesión levantada por el cliente
+	// m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
 	// Luego debemos mostrar los datos finales al template
 	render.RenderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
@@ -126,8 +128,9 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	// Parseamos la instancia de formulario que le pasamos en el método MakeReservation() y detectamos
 	// si existen errores.
 	err := r.ParseForm()
+	err = errors.New("Este es un mensaje de error")
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err) // Centralizamos el manejo de errores con los helpers
 		return
 	}
 
@@ -152,7 +155,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	form.Required("first_name", "last_name", "email")
 
 	// Incorporamos un ejemplo de validación de mínimos caracteres soportados
-	form.MinLength("first_name", 3, r)
+	form.MinLength("first_name", 3)
 
 	// Implementamos una validación de formato email
 	form.IsEmail("email")
