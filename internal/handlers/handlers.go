@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -51,16 +50,14 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
 // About es la renderización de la página About de nuestro sitio
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 
-	// Escribimos dentro de un mapa los parámetros que debemos pasarle a la Webpage para que los muestre.
-	stringMap := make(map[string]string)
-	stringMap["test"] = "Sarlanga"
+	// [DEPRECADO] Escribimos dentro de un mapa los parámetros que debemos pasarle a la Webpage para que los muestre.
+	// stringMap := make(map[string]string)
+	// stringMap["test"] = "Sarlanga"
 
-	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
-	stringMap["remote_ip"] = remoteIP
+	// remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
+	// stringMap["remote_ip"] = remoteIP
 
-	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{
-		StringMap: stringMap,
-	})
+	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{})
 }
 
 // Contact es la renderización de la página de contacto
@@ -128,7 +125,7 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	// Parseamos la instancia de formulario que le pasamos en el método MakeReservation() y detectamos
 	// si existen errores.
 	err := r.ParseForm()
-	err = errors.New("Este es un mensaje de error")
+	// err = errors.New("este es un mensaje de error") Línea comentada dado que se fuerza el error
 	if err != nil {
 		helpers.ServerError(w, err) // Centralizamos el manejo de errores con los helpers
 		return

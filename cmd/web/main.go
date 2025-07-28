@@ -11,6 +11,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/pablom07/go-course/internal/config"
 	"github.com/pablom07/go-course/internal/handlers"
+	"github.com/pablom07/go-course/internal/helpers"
 	"github.com/pablom07/go-course/internal/models"
 	"github.com/pablom07/go-course/internal/render"
 )
@@ -58,12 +59,14 @@ func run() error {
 	// Cambiar este valor cuando se encuentre en prod
 	app.InProduction = false
 
+	// Definimos los loggers
 	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
 
 	errorLog = log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	app.ErrorLog = errorLog
 
+	// Definimos la sesión
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
@@ -83,7 +86,7 @@ func run() error {
 
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
-
+	helpers.NewHelpers(&app)
 	render.NewTemplates(&app)
 
 	// Web Routing using 'net/http'
