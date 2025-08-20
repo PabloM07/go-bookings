@@ -1,0 +1,8 @@
+create_table("room_restrictions") {
+    t.Column("id", "integer", {primary: true, auto_increment: true})
+    t.Column("start_date", "date", {})
+    t.Column("end_date", "date", {})
+    t.Column("room_id", "integer", {foreign_key: true, references: "rooms.id"})
+    t.Column("reservation_id", "integer", {foreign_key: true, references: "reservations.id"})
+    t.Column("restriction_id", "integer", {foreign_key: true, references: "restrictions.id"})
+}
